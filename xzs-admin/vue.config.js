@@ -20,6 +20,9 @@ module.exports = {
     proxy: {
       "/api": {
         target: "http://xzsadmin.mrhuxt.cn:8100",
+        pathRewrite: {
+          // "^/api": "", // 重写接口
+        },
         changeOrigin: true,
       },
     },
