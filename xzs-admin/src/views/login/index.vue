@@ -137,6 +137,7 @@ export default {
         if (valid) {
           this.loading = true
           loginApi.login(this.loginForm).then(function (result) {
+            console.log(result)
             if (result && result.code === 1) {
               _this.setUserName(_this.loginForm.userName)
               _this.$router.push({ path: '/' })
