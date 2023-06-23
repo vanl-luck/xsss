@@ -19,7 +19,8 @@ module.exports = {
     hotOnly: false,
     proxy: {
       "/apis": {
-        target: "http://soft.mrhuxt.cn:3456",
+        // target: "http://soft.mrhuxt.cn:3456",
+        target: "http://127.0.0.1:3456",
         pathRewrite: {
           // "^/api": "", // 重写接口
         },

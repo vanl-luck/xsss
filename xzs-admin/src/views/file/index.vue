@@ -1,33 +1,36 @@
 <template>
   <div>
     <el-breadcrumb class="menu" separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item
-        :to="{ path: '#' }"
-        @click="handelPath(path)"
-        v-for="path in pathList"
+      <el-link
+        @click="handelPath(index)"
+        v-for="(path, index) in pathList"
         :key="path"
-        >{{ path }}</el-breadcrumb-item
-      >
-      <!-- <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-      <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-      <el-breadcrumb-item>活动详情</el-breadcrumb-item> -->
+        >{{ path }}
+        <span> > </span>
+      </el-link>
     </el-breadcrumb>
     <div class="fileList">
       <el-link
         class="folder"
         :underline="false"
         v-for="item in folderList"
-        :key="item"
+        :key="item.key"
         @click="handelFolder(item)"
       >
         <i class="el-icon-folder"> </i>
         <p class="folderName">{{ item.name }}</p>
       </el-link>
 
-      <div class="file" v-for="(item, index) in fileList" :key="index">
+      <el-link
+        class="file"
+        :underline="false"
+        v-for="(item, index) in fileList"
+        :key="index"
+        @click="handelPreUrl(item.Key)"
+      >
         <i class="el-icon-document"></i>
-        <p>file</p>
-      </div>
+        <p>{{ item.name }}</p>
+      </el-link>
     </div>
   </div>
 </template>
@@ -44,6 +47,7 @@ export default {
   },
   created() {
     this.getfolders();
+    this.getfiles();
   },
   methods: {
     handelFolder(item) {
@@ -51,34 +55,64 @@ export default {
       this.getfolders(key);
       console.log("handelFolder", item);
     },
-    handelPath(path) {
+    handelPath(index) {
+      //   console.log("path", index);
+      const path = this.pathList.slice(0, index + 1).join("/") + "/";
       console.log("path", path);
+      this.getfolders(path);
+      this.getfiles(path);
     },
     getfolders(Key = "") {
       fileApi.getDirs({ Key }).then((data) => {
         console.log("data", data);
         if (data?.length) {
           const newArr = [];
-          let path = [];
           data.forEach((element) => {
             const arr = element.split("/");
             arr.pop();
-            path = arr;
             const name = arr[arr.length - 1];
             const obj = {
               name,
               key: element,
             };
-
             newArr.push(obj);
           });
           this.folderList = newArr;
-          this.pathList = path;
+        } else {
+          this.folderList = [];
+        }
+        if (Key) {
+          const pathList = Key.split("/");
+          pathList.pop();
+          this.pathList = pathList;
+        } else {
+          this.pathList = ["水利工程制图资源库"];
         }
       });
     },
-    getfiles() {},
-    getPreUrl() {},
+    getfiles(key = "") {
+      fileApi.getFiles(key).then((res) => {
+        if (res.data?.length) {
+          const fileList = res.data.map((item) => {
+            item.name = item.Key.split("/").pop();
+            return item;
+          });
+          this.fileList = fileList;
+          console.log("fileList", fileList);
+        } else {
+          this.fileList = [];
+        }
+      });
+    },
+    handelPreUrl(Key) {
+      if (Key) {
+        fileApi.geturl({ Key }).then((res) => {
+          window.open(res.previewUrl, "_blank");
+
+          console.log("res", res);
+        });
+      }
+    },
   },
 };
 </script>
