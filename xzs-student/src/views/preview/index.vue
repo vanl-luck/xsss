@@ -43,7 +43,9 @@
           <el-button
             round
             class="el-icon-download"
+            :disabled="item.isView"
             @click="handelDownloadFile(item.Key)"
+            style="margin:0"
             >下载
           </el-button>
         </div>
@@ -51,12 +53,12 @@
         <!-- <div class="overlay"></div> -->
       </el-link>
     </div>
-    <!-- <el-image
+    <el-image
       style="width: 100%; height: 100%"
       :preview-src-list="url"
       v-if="url.length > 0"
     >
-    </el-image> -->
+    </el-image>
   </div>
 </template>
 
@@ -118,9 +120,10 @@ export default {
         'xml',
         'htm',
         'html',
-        'jpg'
+        'jpg',
+        'dwg'
       ],
-      url: ''
+      url: []
     }
   },
   created () {
@@ -199,10 +202,15 @@ export default {
       if (suffix === 'jpg' || suffix === 'png') {
         return fileApi.geturl({ Key }).then((res) => {
           window.open(res.downloadUrl, '_blank')
-          this.url = res.downloadUrl
+          // this.url = res.downloadUrl
         })
-      }
-      if (Key) {
+      } else if (suffix === 'dwg') {
+        return fileApi.geturl({ Key }).then((res) => {
+          window.open('https://ow365.cn/?i=31837&ssl=1&furl=' + res.downloadUrl, '_blank')
+
+          // this.url = res.downloadUrl
+        })
+      } else if (Key) {
         fileApi.geturl({ Key }).then((res) => {
           window.open(res.previewUrl, '_blank')
           console.log('res', res)
