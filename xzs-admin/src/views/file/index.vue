@@ -33,14 +33,15 @@
         </div>
 
         <div class="file-actions">
-          <el-botton class="el-icon-view" @click="handelPreUrl(item.Key)"
-            >预览</el-botton
+          <el-button round class="el-icon-view" @click="handelPreUrl(item.Key)"
+            >预览</el-button
           >
-          <el-botton
+          <el-button
+            round
             class="el-icon-download"
             @click="handelDownloadFile(item.Key)"
             >下载
-          </el-botton>
+          </el-button>
         </div>
 
         <!-- <div class="overlay"></div> -->
@@ -110,6 +111,7 @@ export default {
         if (res.data?.length) {
           const fileList = res.data.map((item) => {
             item.name = item.Key.split("/").pop();
+            item.isView = item.name.split(".")[1];
             return item;
           });
           this.fileList = fileList;
