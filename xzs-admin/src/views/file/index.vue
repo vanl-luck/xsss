@@ -33,7 +33,11 @@
         </div>
 
         <div class="file-actions">
-          <el-button round class="el-icon-view" @click="handelPreUrl(item.Key)"
+          <el-button
+            round
+            class="el-icon-view"
+            disabled="!item.isView"
+            @click="handelPreUrl(item.Key)"
             >预览</el-button
           >
           <el-button
@@ -58,7 +62,57 @@ export default {
       folderList: [],
       fileList: [],
       pathList: [],
-      typeList: []
+      typeList: [
+        'pptx',
+        'ppt',
+        'pot',
+        'potx',
+        'pps',
+        'ppsx',
+        'dps',
+        'dpt',
+        'pptm',
+        'potm',
+        'ppsm',
+        'doc',
+        'dot',
+        'wps',
+        'wpt',
+        'docx',
+        'dotx',
+        'docm',
+        'dotm',
+        'xls',
+        'xlt',
+        'et',
+        'ett',
+        'xlsx',
+        'xltx',
+        'csv',
+        'xlsb',
+        'xlsm',
+        'xltm',
+        'ets',
+        'pdf',
+        'lrc',
+        'c',
+        'cpp',
+        'h',
+        'asm',
+        's',
+        'java',
+        'asp',
+        'bat',
+        'bas',
+        'prg',
+        'cmd',
+        'rtf',
+        'txt',
+        'log',
+        'xml',
+        'htm',
+        'html'
+      ]
     }
   },
   created () {
@@ -112,8 +166,10 @@ export default {
         if (res.data?.length) {
           const fileList = res.data.map((item) => {
             item.name = item.Key.split('/').pop()
-
-            item.isView = item.name.split('.')[1]
+            const type = item.name.split('.')[1]
+            console.log('type', type)
+            const isView = this.typeList.find((item) => item == type)
+            item.isView = Boolean(isView)
             return item
           })
           this.fileList = fileList
