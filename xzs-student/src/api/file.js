@@ -1,4 +1,4 @@
-import { post, postWithLoadTip, get } from '@/utils/request'
+import { post, get } from '@/utils/request'
 
 export default {
   //   查询文件夹

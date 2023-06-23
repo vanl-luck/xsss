@@ -36,14 +36,16 @@
           <el-button
             round
             class="el-icon-view"
-            disabled="!item.isView"
-            @click="handelPreUrl(item.Key)"
+            :disabled="!item.isView"
+            @click="handelPreUrl(item.Key, $event)"
             >预览</el-button
           >
           <el-button
             round
             class="el-icon-download"
+            :disabled="item.isView"
             @click="handelDownloadFile(item.Key)"
+            style="margin:0"
             >下载
           </el-button>
         </div>
@@ -51,6 +53,12 @@
         <!-- <div class="overlay"></div> -->
       </el-link>
     </div>
+    <el-image
+      style="width: 100%; height: 100%"
+      :preview-src-list="url"
+      v-if="url.length > 0"
+    >
+    </el-image>
   </div>
 </template>
 
@@ -111,8 +119,11 @@ export default {
         'log',
         'xml',
         'htm',
-        'html'
-      ]
+        'html',
+        'jpg',
+        'dwg'
+      ],
+      url: []
     }
   },
   created () {
@@ -186,11 +197,22 @@ export default {
         })
       }
     },
-    handelPreUrl (Key) {
-      if (Key) {
+    handelPreUrl (Key, event) {
+      const suffix = Key.split('.').pop()
+      if (suffix === 'jpg' || suffix === 'png') {
+        return fileApi.geturl({ Key }).then((res) => {
+          window.open(res.downloadUrl, '_blank')
+          // this.url = res.downloadUrl
+        })
+      } else if (suffix === 'dwg') {
+        return fileApi.geturl({ Key }).then((res) => {
+          window.open('https://ow365.cn/?i=31837&ssl=1&furl=' + res.downloadUrl, '_blank')
+
+          // this.url = res.downloadUrl
+        })
+      } else if (Key) {
         fileApi.geturl({ Key }).then((res) => {
           window.open(res.previewUrl, '_blank')
-
           console.log('res', res)
         })
       }
