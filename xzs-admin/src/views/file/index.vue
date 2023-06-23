@@ -22,7 +22,7 @@
       </el-link>
 
       <el-link
-        class="file"
+        class="file file-container"
         :underline="false"
         v-for="(item, index) in fileList"
         :key="index"
@@ -34,8 +34,8 @@
         </div>
 
         <div class="file-actions">
-          <button @click="downloadFile">Download</button>
-          <button @click="previewFile">Preview</button>
+          <i class="el-icon-view" @click="downloadFile">Download</i>
+          <i class="el-icon-download" @click="previewFile">Preview</i>
         </div>
       </el-link>
     </div>
@@ -148,5 +148,44 @@ export default {
       color: #113970;
     }
   }
+}
+
+.file-container {
+  position: relative;
+
+  //   border: 1px solid #000;
+}
+
+.file-icon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    margin-top: 10px;
+  }
+}
+
+.file-actions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: none;
+  justify-content: space-around;
+  background-color: rgba(255, 255, 255, 0.7);
+  i {
+    font-size: 12px;
+  }
+}
+
+.file-container:hover .file-actions {
+  display: flex;
 }
 </style>
