@@ -28,8 +28,15 @@
         :key="index"
         @click="handelPreUrl(item.Key)"
       >
-        <i class="el-icon-document"></i>
-        <p>{{ item.name }}</p>
+        <div class="file-icon">
+          <i class="el-icon-document"></i>
+          <p>{{ item.name }}</p>
+        </div>
+
+        <div class="file-actions">
+          <button @click="downloadFile">Download</button>
+          <button @click="previewFile">Preview</button>
+        </div>
       </el-link>
     </div>
   </div>
@@ -51,8 +58,9 @@ export default {
   },
   methods: {
     handelFolder(item) {
-      const { key, name } = item;
+      const { key } = item;
       this.getfolders(key);
+      this.getfiles(key);
       console.log("handelFolder", item);
     },
     handelPath(index) {
@@ -90,8 +98,8 @@ export default {
         }
       });
     },
-    getfiles(key = "") {
-      fileApi.getFiles(key).then((res) => {
+    getfiles(Key = "") {
+      fileApi.getFiles({ Key }).then((res) => {
         if (res.data?.length) {
           const fileList = res.data.map((item) => {
             item.name = item.Key.split("/").pop();
