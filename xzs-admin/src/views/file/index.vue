@@ -36,7 +36,7 @@
           <el-button
             round
             class="el-icon-view"
-            disabled="!item.isView"
+            :disabled="!item.isView"
             @click="handelPreUrl(item.Key)"
             >预览</el-button
           >
@@ -168,7 +168,7 @@ export default {
             item.name = item.Key.split('/').pop()
             const type = item.name.split('.')[1]
             console.log('type', type)
-            const isView = this.typeList.find((item) => item == type)
+            const isView = this.typeList.find((item) => item === type)
             item.isView = Boolean(isView)
             return item
           })

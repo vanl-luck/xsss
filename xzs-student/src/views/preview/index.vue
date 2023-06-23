@@ -36,7 +36,7 @@
           <el-button
             round
             class="el-icon-view"
-            disabled="!item.isView"
+            :disabled="!item.isView"
             @click="handelPreUrl(item.Key)"
             >预览</el-button
           >
