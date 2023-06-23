@@ -58,6 +58,7 @@ export default {
       folderList: [],
       fileList: [],
       pathList: [],
+      typeList: [],
     };
   },
   created() {
@@ -111,6 +112,7 @@ export default {
         if (res.data?.length) {
           const fileList = res.data.map((item) => {
             item.name = item.Key.split("/").pop();
+
             item.isView = item.name.split(".")[1];
             return item;
           });
