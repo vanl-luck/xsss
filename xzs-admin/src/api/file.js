@@ -1,7 +1,10 @@
 import { post, postWithLoadTip, get } from "@/utils/request";
 
 export default {
-  //   login: (query) => postWithLoadTip(`/api/ssuser/login`, query),
-  //   logout: (query) => post(`/apis/user/logout`, query),
-  getDirs: (query) => get("/apis/file/dirs", query),
+  //   查询文件夹
+  getDirs: (query) => get(`/apis/file/dirs`, query),
+  //   查询文件
+  getFiles: (query) => get("/apis/file/getfilesbydir", query),
+  //   查询预览和下载URL
+  geturl: (query) => post("/apis/file/geturl", query),
 };
