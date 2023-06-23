@@ -26,7 +26,6 @@
         :underline="false"
         v-for="(item, index) in fileList"
         :key="index"
-        @click="handelPreUrl(item.Key)"
       >
         <div class="file-icon">
           <i class="el-icon-document"></i>
@@ -34,9 +33,17 @@
         </div>
 
         <div class="file-actions">
-          <i class="el-icon-view" @click="downloadFile">Download</i>
-          <i class="el-icon-download" @click="previewFile">Preview</i>
+          <el-botton class="el-icon-view" @click="handelPreUrl(item.Key)"
+            >预览</el-botton
+          >
+          <el-botton
+            class="el-icon-download"
+            @click="handelDownloadFile(item.Key)"
+            >下载
+          </el-botton>
         </div>
+
+        <!-- <div class="overlay"></div> -->
       </el-link>
     </div>
   </div>
@@ -112,6 +119,13 @@ export default {
         }
       });
     },
+    handelDownloadFile(Key) {
+      if (Key) {
+        fileApi.geturl({ Key }).then((res) => {
+          window.open(res.downloadUrl, "_blank");
+        });
+      }
+    },
     handelPreUrl(Key) {
       if (Key) {
         fileApi.geturl({ Key }).then((res) => {
@@ -174,18 +188,34 @@ export default {
 
 .file-actions {
   position: absolute;
-  bottom: 0;
+  bottom: 80px;
   left: 0;
   width: 100%;
   display: none;
   justify-content: space-around;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: white;
   i {
     font-size: 12px;
+    color: white;
   }
 }
 
 .file-container:hover .file-actions {
   display: flex;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+}
+
+.file-container:hover .file-actions,
+.file-container:hover .overlay {
+  display: block;
 }
 </style>
