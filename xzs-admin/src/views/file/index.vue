@@ -43,86 +43,86 @@
 </template>
 
 <script>
-import fileApi from "@/api/file";
+import fileApi from '@/api/file'
 export default {
-  data() {
+  data () {
     return {
       folderList: [],
       fileList: [],
-      pathList: [],
-    };
+      pathList: []
+    }
   },
-  created() {
-    this.getfolders();
-    this.getfiles();
+  created () {
+    this.getfolders()
+    this.getfiles()
   },
   methods: {
-    handelFolder(item) {
-      const { key } = item;
-      this.getfolders(key);
-      this.getfiles(key);
-      console.log("handelFolder", item);
+    handelFolder (item) {
+      const { key } = item
+      this.getfolders(key)
+      this.getfiles(key)
+      console.log('handelFolder', item)
     },
-    handelPath(index) {
+    handelPath (index) {
       //   console.log("path", index);
-      const path = this.pathList.slice(0, index + 1).join("/") + "/";
-      console.log("path", path);
-      this.getfolders(path);
-      this.getfiles(path);
+      const path = this.pathList.slice(0, index + 1).join('/') + '/'
+      console.log('path', path)
+      this.getfolders(path)
+      this.getfiles(path)
     },
-    getfolders(Key = "") {
+    getfolders (Key = '') {
       fileApi.getDirs({ Key }).then((data) => {
-        console.log("data", data);
+        console.log('data', data)
         if (data?.length) {
-          const newArr = [];
+          const newArr = []
           data.forEach((element) => {
-            const arr = element.split("/");
-            arr.pop();
-            const name = arr[arr.length - 1];
+            const arr = element.split('/')
+            arr.pop()
+            const name = arr[arr.length - 1]
             const obj = {
               name,
-              key: element,
-            };
-            newArr.push(obj);
-          });
-          this.folderList = newArr;
+              key: element
+            }
+            newArr.push(obj)
+          })
+          this.folderList = newArr
         } else {
-          this.folderList = [];
+          this.folderList = []
         }
         if (Key) {
-          const pathList = Key.split("/");
-          pathList.pop();
-          this.pathList = pathList;
+          const pathList = Key.split('/')
+          pathList.pop()
+          this.pathList = pathList
         } else {
-          this.pathList = ["水利工程制图资源库"];
+          this.pathList = ['水利工程制图资源库']
         }
-      });
+      })
     },
-    getfiles(Key = "") {
+    getfiles (Key = '') {
       fileApi.getFiles({ Key }).then((res) => {
         if (res.data?.length) {
           const fileList = res.data.map((item) => {
-            item.name = item.Key.split("/").pop();
-            return item;
-          });
-          this.fileList = fileList;
-          console.log("fileList", fileList);
+            item.name = item.Key.split('/').pop()
+            return item
+          })
+          this.fileList = fileList
+          console.log('fileList', fileList)
         } else {
-          this.fileList = [];
+          this.fileList = []
         }
-      });
+      })
     },
-    handelPreUrl(Key) {
+    handelPreUrl (Key) {
       if (Key) {
         fileApi.geturl({ Key }).then((res) => {
-          window.open(res.previewUrl, "_blank");
+          window.open(res.previewUrl, '_blank')
 
-          console.log("res", res);
-        });
+          console.log('res', res)
+        })
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
