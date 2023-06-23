@@ -22,11 +22,10 @@
       </el-link>
 
       <el-link
-        class="file"
+        class="file file-container"
         :underline="false"
         v-for="(item, index) in fileList"
         :key="index"
-        @click="handelPreUrl(item.Key)"
       >
         <div class="file-icon">
           <i class="el-icon-document"></i>
@@ -34,9 +33,18 @@
         </div>
 
         <div class="file-actions">
-          <button @click="downloadFile">Download</button>
-          <button @click="previewFile">Preview</button>
+          <el-button round class="el-icon-view" @click="handelPreUrl(item.Key)"
+            >预览</el-button
+          >
+          <el-button
+            round
+            class="el-icon-download"
+            @click="handelDownloadFile(item.Key)"
+            >下载
+          </el-button>
         </div>
+
+        <!-- <div class="overlay"></div> -->
       </el-link>
     </div>
   </div>
@@ -49,7 +57,8 @@ export default {
     return {
       folderList: [],
       fileList: [],
-      pathList: []
+      pathList: [],
+      typeList: []
     }
   },
   created () {
@@ -103,6 +112,8 @@ export default {
         if (res.data?.length) {
           const fileList = res.data.map((item) => {
             item.name = item.Key.split('/').pop()
+
+            item.isView = item.name.split('.')[1]
             return item
           })
           this.fileList = fileList
@@ -111,6 +122,13 @@ export default {
           this.fileList = []
         }
       })
+    },
+    handelDownloadFile (Key) {
+      if (Key) {
+        fileApi.geturl({ Key }).then((res) => {
+          window.open(res.downloadUrl, '_blank')
+        })
+      }
     },
     handelPreUrl (Key) {
       if (Key) {
@@ -148,5 +166,60 @@ export default {
       color: #113970;
     }
   }
+}
+
+.file-container {
+  position: relative;
+
+  //   border: 1px solid #000;
+}
+
+.file-icon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    margin-top: 10px;
+  }
+}
+
+.file-actions {
+  position: absolute;
+  bottom: 80px;
+  left: 0;
+  width: 100%;
+  display: none;
+  justify-content: space-around;
+  background-color: white;
+  i {
+    font-size: 12px;
+    color: white;
+  }
+}
+
+.file-container:hover .file-actions {
+  display: flex;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+}
+
+.file-container:hover .file-actions,
+.file-container:hover .overlay {
+  display: block;
 }
 </style>
