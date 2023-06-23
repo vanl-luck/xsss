@@ -37,7 +37,7 @@
             round
             class="el-icon-view"
             :disabled="!item.isView"
-            @click="handelPreUrl(item.Key)"
+            @click="handelPreUrl(item.Key, $event)"
             >预览</el-button
           >
           <el-button
@@ -51,6 +51,12 @@
         <!-- <div class="overlay"></div> -->
       </el-link>
     </div>
+    <!-- <el-image
+      style="width: 100%; height: 100%"
+      :preview-src-list="url"
+      v-if="url.length > 0"
+    >
+    </el-image> -->
   </div>
 </template>
 
@@ -111,8 +117,10 @@ export default {
         'log',
         'xml',
         'htm',
-        'html'
-      ]
+        'html',
+        'jpg'
+      ],
+      url: ''
     }
   },
   created () {
@@ -186,11 +194,17 @@ export default {
         })
       }
     },
-    handelPreUrl (Key) {
+    handelPreUrl (Key, event) {
+      const suffix = Key.split('.').pop()
+      if (suffix === 'jpg' || suffix === 'png') {
+        return fileApi.geturl({ Key }).then((res) => {
+          window.open(res.downloadUrl, '_blank')
+          this.url = res.downloadUrl
+        })
+      }
       if (Key) {
         fileApi.geturl({ Key }).then((res) => {
           window.open(res.previewUrl, '_blank')
-
           console.log('res', res)
         })
       }
