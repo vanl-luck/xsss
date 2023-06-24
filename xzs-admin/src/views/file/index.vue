@@ -233,14 +233,14 @@ export default {
   text-align: center;
   display: flex;
   flex-wrap: wrap;
-  padding: 30px;
+  padding: 10px 20px 30px;
   .el-link--inner {
     width: 100%;
     height: 100%;
     position: relative;
     p {
       position: absolute;
-      top: 110px;
+      top: 90px;
       left: 0;
       right: 0;
       line-height: 18px;
@@ -259,7 +259,7 @@ export default {
   .folder,
   .file {
     width: 150px;
-    height: 150px;
+    height: 120px;
     margin: 0 10px;
     .folderName {
       font-size: 12px;
@@ -272,7 +272,7 @@ export default {
     .file-actions {
       position: absolute;
       //   bottom: 92px;
-      top: 70px;
+      top: 60px;
       left: 0;
       width: 100%;
       display: none;
