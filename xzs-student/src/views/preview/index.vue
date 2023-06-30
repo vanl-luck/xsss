@@ -45,7 +45,7 @@
             class="el-icon-download"
             :disabled="item.isView"
             @click="handelDownloadFile(item.Key)"
-            style="margin:0"
+            style="margin: 0"
             >下载
           </el-button>
         </div>
@@ -121,7 +121,8 @@ export default {
         'htm',
         'html',
         'jpg',
-        'dwg'
+        'dwg',
+        'skp'
       ],
       url: []
     }
@@ -199,15 +200,10 @@ export default {
     },
     handelPreUrl (Key, event) {
       const suffix = Key.split('.').pop()
+      // 命中图片格式
       if (suffix === 'jpg' || suffix === 'png') {
         return fileApi.geturl({ Key }).then((res) => {
           window.open(res.downloadUrl, '_blank')
-          // this.url = res.downloadUrl
-        })
-      } else if (suffix === 'dwg') {
-        return fileApi.geturl({ Key }).then((res) => {
-          window.open('https://ow365.cn/?i=31837&ssl=1&furl=' + res.downloadUrl, '_blank')
-
           // this.url = res.downloadUrl
         })
       } else if (Key) {
@@ -216,6 +212,16 @@ export default {
           console.log('res', res)
         })
       }
+      // 命中dwg格式
+      // else if (suffix === 'dwg') {
+      //   return fileApi.geturl({ Key }).then((res) => {
+      //     window.open(
+      //       'https://ow365.cn/?i=31837&ssl=1&furl=' + res.downloadUrl,
+      //       '_blank'
+      //     )
+      //     // this.url = res.downloadUrl
+      //   })
+      // }
     }
   }
 }
