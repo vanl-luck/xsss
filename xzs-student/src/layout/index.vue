@@ -32,7 +32,6 @@
     <el-main class="student-main">
       <router-view/>
     </el-main>
- 
 
   </el-container>
 </template>
