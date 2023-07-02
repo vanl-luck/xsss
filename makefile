@@ -1,0 +1,2 @@
+docker buildx build --platform linux/amd64,linux/arm64 --push -t haomingkeji-docker.pkg.coding.net/zaixiankaoshi/examination/student-web:v0.0.3 .
+docker push haomingkeji-docker.pkg.coding.net/zaixiankaoshi/examination/student-web:v0.0.3
