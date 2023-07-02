@@ -64,113 +64,113 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-import loginApi from '@/api/login'
+import { mapMutations } from "vuex";
+import loginApi from "@/api/login";
 
 export default {
-  name: 'Login',
-  data () {
+  name: "Login",
+  data() {
     const validateUsername = (rule, value, callback) => {
       if (value.length < 5) {
-        callback(new Error('用户名不能少于5个字符'))
+        callback(new Error("用户名不能少于5个字符"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 5) {
-        callback(new Error('密码不能少于5个字符'))
+        callback(new Error("密码不能少于5个字符"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       loginForm: {
-        userName: '',
-        password: '',
-        remember: false
+        userName: "",
+        password: "",
+        remember: false,
       },
       loginRules: {
         userName: [
-          { required: true, trigger: 'blur', validator: validateUsername }
+          { required: true, trigger: "blur", validator: validateUsername },
         ],
         password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
-        ]
+          { required: true, trigger: "blur", validator: validatePassword },
+        ],
       },
-      passwordType: 'password',
+      passwordType: "password",
       capsTooltip: false,
       loading: false,
-      showDialog: false
-    }
+      showDialog: false,
+    };
   },
-  created () {
+  created() {
     // window.addEventListener('storage', this.afterQRScan)
   },
-  mounted () {
-    if (this.loginForm.userName === '') {
-      this.$refs.userName.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
+  mounted() {
+    if (this.loginForm.userName === "") {
+      this.$refs.userName.focus();
+    } else if (this.loginForm.password === "") {
+      this.$refs.password.focus();
     }
   },
-  destroyed () {
+  destroyed() {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
-    checkCapslock ({ shiftKey, key } = {}) {
+    checkCapslock({ shiftKey, key } = {}) {
       if (key && key.length === 1) {
         // eslint-disable-next-line no-mixed-operators
         if (
-          (shiftKey && key >= 'a' && key <= 'z') ||
-          (!shiftKey && key >= 'A' && key <= 'Z')
+          (shiftKey && key >= "a" && key <= "z") ||
+          (!shiftKey && key >= "A" && key <= "Z")
         ) {
-          this.capsTooltip = true
+          this.capsTooltip = true;
         } else {
-          this.capsTooltip = false
+          this.capsTooltip = false;
         }
       }
-      if (key === 'CapsLock' && this.capsTooltip === true) {
-        this.capsTooltip = false
+      if (key === "CapsLock" && this.capsTooltip === true) {
+        this.capsTooltip = false;
       }
     },
-    showPwd () {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
+    showPwd() {
+      if (this.passwordType === "password") {
+        this.passwordType = "";
       } else {
-        this.passwordType = 'password'
+        this.passwordType = "password";
       }
       this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
+        this.$refs.password.focus();
+      });
     },
-    handleLogin () {
-      let _this = this
+    handleLogin() {
+      let _this = this;
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           loginApi
             .login(this.loginForm)
             .then(function (result) {
               if (result && result.code === 1) {
-                _this.setUserName(_this.loginForm.userName)
-                _this.$router.push({ path: '/' })
+                _this.setUserName(_this.loginForm.userName);
+                _this.$router.push({ path: "/" });
               } else {
-                _this.loading = false
-                _this.$message.error(result.message)
+                _this.loading = false;
+                _this.$message.error(result.message);
               }
             })
             .catch(function (reason) {
-              _this.loading = false
-            })
+              _this.loading = false;
+            });
         } else {
-          return false
+          return false;
         }
-      })
+      });
     },
-    ...mapMutations('user', ['setUserName'])
-  }
-}
+    ...mapMutations("user", ["setUserName"]),
+  },
+};
 </script>
 
 <style lang="scss">

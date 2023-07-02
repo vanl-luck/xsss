@@ -63,154 +63,182 @@
 </template>
 
 <script>
-import fileApi from '@/api/file'
+import { mapState } from "vuex";
+
+import fileApi from "@/api/file";
+import file from "../../../../xzs-admin/src/api/file";
 export default {
-  data () {
+  data() {
     return {
+      rootPath: "",
       folderList: [],
       fileList: [],
       pathList: [],
       typeList: [
-        'pptx',
-        'ppt',
-        'pot',
-        'potx',
-        'pps',
-        'ppsx',
-        'dps',
-        'dpt',
-        'pptm',
-        'potm',
-        'ppsm',
-        'doc',
-        'dot',
-        'wps',
-        'wpt',
-        'docx',
-        'dotx',
-        'docm',
-        'dotm',
-        'xls',
-        'xlt',
-        'et',
-        'ett',
-        'xlsx',
-        'xltx',
-        'csv',
-        'xlsb',
-        'xlsm',
-        'xltm',
-        'ets',
-        'pdf',
-        'lrc',
-        'c',
-        'cpp',
-        'h',
-        'asm',
-        's',
-        'java',
-        'asp',
-        'bat',
-        'bas',
-        'prg',
-        'cmd',
-        'rtf',
-        'txt',
-        'log',
-        'xml',
-        'htm',
-        'html',
-        'jpg',
-        'dwg',
-        'skp'
+        "pptx",
+        "ppt",
+        "pot",
+        "potx",
+        "pps",
+        "ppsx",
+        "dps",
+        "dpt",
+        "pptm",
+        "potm",
+        "ppsm",
+        "doc",
+        "dot",
+        "wps",
+        "wpt",
+        "docx",
+        "dotx",
+        "docm",
+        "dotm",
+        "xls",
+        "xlt",
+        "et",
+        "ett",
+        "xlsx",
+        "xltx",
+        "csv",
+        "xlsb",
+        "xlsm",
+        "xltm",
+        "ets",
+        "pdf",
+        "lrc",
+        "c",
+        "cpp",
+        "h",
+        "asm",
+        "s",
+        "java",
+        "asp",
+        "bat",
+        "bas",
+        "prg",
+        "cmd",
+        "rtf",
+        "txt",
+        "log",
+        "xml",
+        "htm",
+        "html",
+        "jpg",
+        "dwg",
+        "skp",
       ],
-      url: []
-    }
+      url: [],
+    };
   },
-  created () {
-    this.getfolders()
-    this.getfiles()
+  created() {
+    this.getPathByUsername();
+  },
+  computed: {
+    ...mapState([
+      "user", // 映射 this.userName 为 store.state.userName
+    ]),
   },
   methods: {
-    handelFolder (item) {
-      const { key } = item
-      this.getfolders(key)
-      this.getfiles(key)
-      console.log('handelFolder', item)
+    getPathByUsername() {
+      const user_name = this.user.userName;
+      fileApi.getPathByUsername({ user_name }).then((res) => {
+        const Key = res.data?.file_path[res.data?.file_path.length - 1];
+        console.log("Key", Key);
+        let str = Key;
+        let lastSlash = str.lastIndexOf("/");
+        let secondLastSlash = str.lastIndexOf("/", lastSlash - 1); // 查找上一个 '/'
+        let rootPath = str.substring(0, secondLastSlash + 1); // '+1' 为了包含该 '/'
+        console.log(rootPath); // 输出 "水利工程制图资源库/1.水利工程项目实施方案/"
+        this.rootPath = rootPath;
+        this.getfolders(Key);
+        this.getfiles(Key);
+      });
     },
-    handelPath (index) {
+    handelFolder(item) {
+      const { key } = item;
+
+      this.getfolders(key);
+      this.getfiles(key);
+      console.log("handelFolder", item);
+    },
+    handelPath(index) {
       //   console.log("path", index);
-      const path = this.pathList.slice(0, index + 1).join('/') + '/'
-      console.log('path', path)
-      this.getfolders(path)
-      this.getfiles(path)
+      const path =
+        this.rootPath + this.pathList.slice(0, index + 1).join("/") + "/";
+      console.log("path", path);
+      this.getfolders(path);
+      this.getfiles(path);
     },
-    getfolders (Key = '') {
+    getfolders(Key = "") {
       fileApi.getDirs({ Key }).then((data) => {
-        console.log('data', data)
+        console.log("data", data);
         if (data?.length) {
-          const newArr = []
+          const newArr = [];
           data.forEach((element) => {
-            const arr = element.split('/')
-            arr.pop()
-            const name = arr[arr.length - 1]
+            const arr = element.split("/");
+            arr.pop();
+            const name = arr[arr.length - 1];
             const obj = {
               name,
-              key: element
-            }
-            newArr.push(obj)
-          })
-          this.folderList = newArr
+              key: element,
+            };
+            newArr.push(obj);
+          });
+          this.folderList = newArr;
         } else {
-          this.folderList = []
+          this.folderList = [];
         }
         if (Key) {
-          const pathList = Key.split('/')
-          pathList.pop()
-          this.pathList = pathList
+          let strPath = Key.split(this.rootPath);
+          console.log("key11", Key, this.rootPath, strPath);
+
+          const pathList = strPath[strPath.length - 1].split("/");
+          pathList.pop();
+          this.pathList = pathList;
         } else {
-          this.pathList = ['水利工程制图资源库']
+          // this.pathList = ["水利工程制图资源库"];
         }
-      })
+      });
     },
-    getfiles (Key = '') {
+    getfiles(Key = "") {
       fileApi.getFiles({ Key }).then((res) => {
         if (res.data?.length) {
           const fileList = res.data.map((item) => {
-            item.name = item.Key.split('/').pop()
-            const type = item.name.split('.')[1]
-            console.log('type', type)
-            const isView = this.typeList.find((item) => item === type)
-            item.isView = Boolean(isView)
-            return item
-          })
-          this.fileList = fileList
-          console.log('fileList', fileList)
+            item.name = item.Key.split("/").pop();
+            const type = item.name.split(".")[1];
+            console.log("type", type);
+            const isView = this.typeList.find((item) => item === type);
+            item.isView = Boolean(isView);
+            return item;
+          });
+          this.fileList = fileList;
+          console.log("fileList", fileList);
         } else {
-          this.fileList = []
+          this.fileList = [];
         }
-      })
+      });
     },
-    handelDownloadFile (Key) {
+    handelDownloadFile(Key) {
       if (Key) {
         fileApi.geturl({ Key }).then((res) => {
-          window.open(res.downloadUrl, '_blank')
-        })
+          window.open(res.downloadUrl, "_blank");
+        });
       }
     },
-    handelPreUrl (Key, event) {
-      const suffix = Key.split('.').pop()
+    handelPreUrl(Key, event) {
+      const suffix = Key.split(".").pop();
       // 命中图片格式
-      if (suffix === 'jpg' || suffix === 'png') {
+      if (suffix === "jpg" || suffix === "png") {
         return fileApi.geturl({ Key }).then((res) => {
-          window.open(res.downloadUrl, '_blank')
+          window.open(res.downloadUrl, "_blank");
           // this.url = res.downloadUrl
-        })
+        });
       } else if (Key) {
         fileApi.geturl({ Key }).then((res) => {
-          window.open(res.previewUrl, '_blank')
-          console.log('res', res)
-        })
+          window.open(res.previewUrl, "_blank");
+          console.log("res", res);
+        });
       }
       // 命中dwg格式
       // else if (suffix === 'dwg') {
@@ -222,9 +250,9 @@ export default {
       //     // this.url = res.downloadUrl
       //   })
       // }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
