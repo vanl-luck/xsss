@@ -6,7 +6,7 @@
         v-for="(path, index) in pathList"
         :key="path"
         >{{ path }}
-        <span> > </span>
+        <span class="path-icon"> > </span>
       </el-link>
     </el-breadcrumb>
     <div class="fileList">
@@ -17,7 +17,7 @@
         :key="item.key"
         @click="handelFolder(item)"
       >
-        <i class="el-icon-folder"> </i>
+        <i class="el-icon-folder folder-icon"> </i>
         <p class="folderName">{{ item.name }}</p>
       </el-link>
 
@@ -33,21 +33,20 @@
         </div>
 
         <div class="file-actions">
-          <el-button
-            round
-            class="el-icon-view"
+          <i
+            class="el-icon-view icon-button"
             :disabled="!item.isView"
             @click="handelPreUrl(item.Key, $event)"
-            >预览</el-button
+            >预览</i
           >
-          <el-button
+          <i
             round
-            class="el-icon-download"
+            class="el-icon-download icon-button"
             :disabled="item.isView"
             @click="handelDownloadFile(item.Key)"
             style="margin: 0"
             >下载
-          </el-button>
+          </i>
         </div>
 
         <!-- <div class="overlay"></div> -->
@@ -265,17 +264,59 @@ export default {
   text-align: center;
   display: flex;
   flex-wrap: wrap;
-  padding: 30px;
+  padding: 10px 20px 30px;
+  .el-link--inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    p {
+      position: absolute;
+      top: 90px;
+      left: 0;
+      right: 0;
+      line-height: 18px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+    }
+    p:hover {
+      overflow: visible;
+      white-space: normal;
+      -webkit-line-clamp: none;
+    }
+  }
   .folder,
   .file {
     width: 150px;
-    height: 150px;
+    height: 120px;
+    margin: 0 10px;
     .folderName {
       font-size: 12px;
     }
-    i {
-      font-size: 80px;
+    .folder-icon {
+      font-size: 70px;
       color: #113970;
+    }
+
+    .file-actions {
+      position: absolute;
+      //   bottom: 92px;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      display: none;
+      justify-content: center;
+      background-color: white;
+      .icon-button {
+        font-size: 14px;
+        color: #113970;
+      }
+
+      .icon-button:first-child {
+        margin-right: 15px;
+      }
     }
   }
 }
@@ -287,32 +328,24 @@ export default {
 }
 
 .file-icon {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  //   position: absolute;
+  //   top: 0;
+  //   bottom: 0;
+  //   left: 0;
+  //   right: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  i {
+    color: #113970;
+
+    font-size: 70px;
+  }
 
   p {
     margin-top: 10px;
-  }
-}
-
-.file-actions {
-  position: absolute;
-  bottom: 80px;
-  left: 0;
-  width: 100%;
-  display: none;
-  justify-content: space-around;
-  background-color: white;
-  i {
     font-size: 12px;
-    color: white;
   }
 }
 
@@ -332,6 +365,14 @@ export default {
 
 .file-container:hover .file-actions,
 .file-container:hover .overlay {
-  display: block;
+  display: flex;
+}
+
+.file-container:hover .el-icon-document {
+  opacity: 0.2;
+}
+
+.path-icon {
+  margin: 0 5px;
 }
 </style>
