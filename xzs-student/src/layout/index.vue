@@ -1,40 +1,54 @@
 <template>
-  <el-container>
-    <el-header height="61" class="student-header">
+  <div class="app">
+    <header class="student-header">
       <div class="head-user">
-        <el-dropdown trigger="click" placement="bottom">
-          <el-badge :is-dot="messageCount!==0" >
-            <el-avatar  class="el-dropdown-avatar" size="medium"  :src="userInfo.imagePath === null ? require('@/assets/avatar.png') : userInfo.imagePath"></el-avatar>
+        <div class="avatar-wrapper">
+          <el-badge :is-dot="messageCount !== 0">
+            <el-avatar class="el-dropdown-avatar" size="medium" :src="userInfo.imagePath === null ? require('@/assets/avatar.png') : userInfo.imagePath"></el-avatar>
           </el-badge>
+        </div>
+        <el-dropdown trigger="click" placement="bottom">
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item @click.native="$router.push({path:'/user/index'})">个人中心</el-dropdown-item>
             <el-dropdown-item @click.native="$router.push({path:'/user/message'})">
-              <el-badge :value="messageCount" v-if="messageCount!==0">
+              <el-badge :value="messageCount" v-if="messageCount !== 0">
                 <span>消息中心</span>
               </el-badge>
-              <span  v-if="messageCount===0">消息中心</span>
+              <span v-else>消息中心</span>
             </el-dropdown-item>
             <el-dropdown-item @click.native="logout" divided>退出</el-dropdown-item>
           </el-dropdown-menu>
+          <span class="username">{{ userInfo.username }}</span>
+          <i class="el-icon-arrow-down el-dropdown-icon"></i>
         </el-dropdown>
       </div>
-      <el-menu class="el-menu-title" mode="horizontal" :default-active="defaultUrl" :router="true">
-        <el-menu-item index="/index">首页</el-menu-item>
-        <el-menu-item index="/paper/index">试卷中心</el-menu-item>
-        <el-menu-item index="/record/index">考试记录</el-menu-item>
-        <el-menu-item index="/question/index">错题本</el-menu-item>
-        <el-menu-item index="/preview/index">预览文件</el-menu-item>
-      </el-menu>
-      <div>
+      <nav class="menu">
+        <ul>
+          <li :class="{ active: defaultUrl === '/index' }">
+            <router-link to="/index">首页</router-link>
+          </li>
+          <li :class="{ active: defaultUrl === '/paper/index' }">
+            <router-link to="/paper/index">试卷中心</router-link>
+          </li>
+          <li :class="{ active: defaultUrl === '/record/index' }">
+            <router-link to="/record/index">考试记录</router-link>
+          </li>
+          <li :class="{ active: defaultUrl === '/question/index' }">
+            <router-link to="/question/index">错题本</router-link>
+          </li>
+          <li :class="{ active: defaultUrl === '/preview/index' }">
+            <router-link to="/preview/index">预览文件</router-link>
+          </li>
+        </ul>
+      </nav>
+      <div class="logo">
         <!-- <a href="/"><img src="@/assets/logo.png" height="56"/></a> -->
       </div>
-    </el-header>
-    <el-main class="student-main">
-      <router-view/>
-    </el-main>
- 
-
-  </el-container>
+    </header>
+    <main class="student-main">
+      <router-view />
+    </main>
+  </div>
 </template>
 
 <script>
