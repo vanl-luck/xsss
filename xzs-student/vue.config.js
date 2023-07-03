@@ -28,12 +28,11 @@ module.exports = {
       },
       "/api": {
         target: "https://xzsadmin.mrhuxt.cn",
-        // target: "http://localhost:8000",
+        // target: "http://127.0.0.1:8100",
         pathRewrite: {
           // "^/api": "", // 重写接口
         },
         changeOrigin: true,
-      },
       },
     },
   },
