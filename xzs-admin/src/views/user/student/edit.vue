@@ -99,31 +99,7 @@ export default {
         userLevel: null,
       },
       cascaderShow: false,
-      props: {
-        lazy: true,
-        checkStrictly: true,
-        lazyLoad(node, resolve) {
-          const { value, level } = node;
-          console.log("node", node);
-          let Key = value || "";
-          fileApi
-            .getDirs({ Key })
-            .then((res) => {
-              const nodes = res.map((item) => {
-                return {
-                  value: item,
-                  label: item.split("/")[item.split("/").length - 2],
-                  leaf: level >= 3,
-                };
-              });
-              console.log(res, "res");
-              resolve(nodes);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        },
-      },
+
       formLoading: false,
       rules: {
         userName: [
@@ -152,6 +128,8 @@ export default {
         _this.getfilePathById(id);
         _this.formLoading = false;
       });
+    } else {
+      this.cascaderShow = true;
     }
   },
   methods: {
@@ -160,7 +138,6 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.formLoading = true;
-
           userApi
             .createUser(this.form)
             .then((data) => {
@@ -215,15 +192,6 @@ export default {
             .catch((error) => {
               console.log(error);
             });
-          // setTimeout(() => {
-          //   const nodes = Array.from({ length: level + 1 }).map((item) => ({
-          //     value: ++id,
-          //     label: `选项${id}`,
-          //     leaf: level >= 2,
-          //   }));
-          //   // 通过调用resolve将子节点数据返回，通知组件数据加载完成
-          //   resolve(nodes);
-          // }, 1000);
         },
       };
     },
@@ -232,15 +200,6 @@ export default {
         this.form.file_path = res.data.file_path;
         this.cascaderShow = true;
         console.log("res11", this.form.file_path);
-      });
-    },
-
-    loadParentOptions(selectedOptions) {
-      if (selectedOptions.length === 0) return;
-      // 假设你有一个加载父级选项的方法，它应该将加载的选项添加到 `options` 数组中
-      this.loadParentOption(selectedOptions[0]).then((parentOption) => {
-        this.options.push(parentOption);
-        this.loadParentOptions(selectedOptions.slice(1));
       });
     },
 
