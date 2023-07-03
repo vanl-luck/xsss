@@ -60,7 +60,8 @@ const postWithLoadTip = function (url, params) {
     withCredentials: true,
     timeout: 30000,
     data: params,
-    headers: { 'Content-Type': 'application/json', 'request-ajax': true }
+    headers: { 'Content-Type': 'application/json', 'request-ajax': true },
+    maxRedirects: 0 // 禁用自动重定向
   }
   return request(true, query)
 }

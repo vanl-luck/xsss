@@ -6,7 +6,7 @@
         v-for="(path, index) in pathList"
         :key="path"
         >{{ path }}
-        <span> > </span>
+        <span class="path-icon"> > </span>
       </el-link>
     </el-breadcrumb>
     <div class="fileList">
@@ -17,7 +17,7 @@
         :key="item.key"
         @click="handelFolder(item)"
       >
-        <i class="el-icon-folder"> </i>
+        <i class="el-icon-folder folder-icon"> </i>
         <p class="folderName">{{ item.name }}</p>
       </el-link>
 
@@ -33,21 +33,20 @@
         </div>
 
         <div class="file-actions">
-          <el-button
-            round
-            class="el-icon-view"
+          <i
+            class="el-icon-view icon-button"
             :disabled="!item.isView"
             @click="handelPreUrl(item.Key, $event)"
-            >预览</el-button
+            >预览</i
           >
-          <el-button
+          <i
             round
-            class="el-icon-download"
+            class="el-icon-download icon-button"
             :disabled="item.isView"
             @click="handelDownloadFile(item.Key)"
             style="margin: 0"
             >下载
-          </el-button>
+          </i>
         </div>
 
         <!-- <div class="overlay"></div> -->
@@ -63,166 +62,197 @@
 </template>
 
 <script>
-import fileApi from "@/api/file";
+import { mapState } from 'vuex'
+
+import fileApi from '@/api/file'
+// import file from '../../../../xzs-admin/src/api/file'
 export default {
-  data() {
+  data () {
     return {
+      rootPath: '',
       folderList: [],
       fileList: [],
       pathList: [],
       typeList: [
-        "pptx",
-        "ppt",
-        "pot",
-        "potx",
-        "pps",
-        "ppsx",
-        "dps",
-        "dpt",
-        "pptm",
-        "potm",
-        "ppsm",
-        "doc",
-        "dot",
-        "wps",
-        "wpt",
-        "docx",
-        "dotx",
-        "docm",
-        "dotm",
-        "xls",
-        "xlt",
-        "et",
-        "ett",
-        "xlsx",
-        "xltx",
-        "csv",
-        "xlsb",
-        "xlsm",
-        "xltm",
-        "ets",
-        "pdf",
-        "lrc",
-        "c",
-        "cpp",
-        "h",
-        "asm",
-        "s",
-        "java",
-        "asp",
-        "bat",
-        "bas",
-        "prg",
-        "cmd",
-        "rtf",
-        "txt",
-        "log",
-        "xml",
-        "htm",
-        "html",
-        "jpg",
-        "dwg",
-        "skp",
+        'pptx',
+        'ppt',
+        'pot',
+        'potx',
+        'pps',
+        'ppsx',
+        'dps',
+        'dpt',
+        'pptm',
+        'potm',
+        'ppsm',
+        'doc',
+        'dot',
+        'wps',
+        'wpt',
+        'docx',
+        'dotx',
+        'docm',
+        'dotm',
+        'xls',
+        'xlt',
+        'et',
+        'ett',
+        'xlsx',
+        'xltx',
+        'csv',
+        'xlsb',
+        'xlsm',
+        'xltm',
+        'ets',
+        'pdf',
+        'lrc',
+        'c',
+        'cpp',
+        'h',
+        'asm',
+        's',
+        'java',
+        'asp',
+        'bat',
+        'bas',
+        'prg',
+        'cmd',
+        'rtf',
+        'txt',
+        'log',
+        'xml',
+        'htm',
+        'html',
+        'jpg',
+        'dwg',
+        'skp'
       ],
-      url: [],
-    };
+      url: []
+    }
   },
-  created() {
-    this.getfolders();
-    this.getfiles();
+  created () {
+    this.getPathByUsername()
+  },
+  computed: {
+    ...mapState([
+      'user' // 映射 this.userName 为 store.state.userName
+    ])
   },
   methods: {
-    handelFolder(item) {
-      const { key } = item;
-      this.getfolders(key);
-      this.getfiles(key);
-      console.log("handelFolder", item);
+    getPathByUsername () {
+      // eslint-disable-next-line camelcase
+      const user_name = this.user.userName
+      fileApi.getPathByUsername({ user_name }).then((res) => {
+        const Key = res.data?.file_path[res.data?.file_path.length - 1]
+        console.log('Key', Key)
+        let str = Key
+        let lastSlash = str.lastIndexOf('/')
+        let secondLastSlash = str.lastIndexOf('/', lastSlash - 1) // 查找上一个 '/'
+        let rootPath = str.substring(0, secondLastSlash + 1) // '+1' 为了包含该 '/'
+        console.log(rootPath) // 输出 "水利工程制图资源库/1.水利工程项目实施方案/"
+        this.rootPath = rootPath
+        this.getfolders(Key)
+        this.getfiles(Key)
+      })
     },
-    handelPath(index) {
+    handelFolder (item) {
+      const { key } = item
+
+      this.getfolders(key)
+      this.getfiles(key)
+      console.log('handelFolder', item)
+    },
+    handelPath (index) {
       //   console.log("path", index);
-      const path = this.pathList.slice(0, index + 1).join("/") + "/";
-      console.log("path", path);
-      this.getfolders(path);
-      this.getfiles(path);
+      const path =
+        this.rootPath + this.pathList.slice(0, index + 1).join('/') + '/'
+      console.log('path', path)
+      this.getfolders(path)
+      this.getfiles(path)
     },
-    getfolders(Key = "") {
+    getfolders (Key = '') {
       fileApi.getDirs({ Key }).then((data) => {
-        console.log("data", data);
+        console.log('data', data)
         if (data?.length) {
-          const newArr = [];
+          const newArr = []
           data.forEach((element) => {
-            const arr = element.split("/");
-            arr.pop();
-            const name = arr[arr.length - 1];
+            const arr = element.split('/')
+            arr.pop()
+            const name = arr[arr.length - 1]
             const obj = {
               name,
-              key: element,
-            };
-            newArr.push(obj);
-          });
-          this.folderList = newArr;
+              key: element
+            }
+            newArr.push(obj)
+          })
+          this.folderList = newArr
         } else {
-          this.folderList = [];
+          this.folderList = []
         }
         if (Key) {
-          const pathList = Key.split("/");
-          pathList.pop();
-          this.pathList = pathList;
+          let strPath = Key.split(this.rootPath)
+          console.log('key11', Key, this.rootPath, strPath)
+
+          const pathList = strPath[strPath.length - 1].split('/')
+          pathList.pop()
+          this.pathList = pathList
         } else {
-          this.pathList = ["水利工程制图资源库"];
+          // this.pathList = ["水利工程制图资源库"];
         }
-      });
+      })
     },
-    getfiles(Key = "") {
+    getfiles (Key = '') {
       fileApi.getFiles({ Key }).then((res) => {
         if (res.data?.length) {
           const fileList = res.data.map((item) => {
-            item.name = item.Key.split("/").pop();
-            const type = item.name.split(".")[1];
-            console.log("type", type);
-            const isView = this.typeList.find((item) => item === type);
-            item.isView = Boolean(isView);
-            return item;
-          });
-          this.fileList = fileList;
-          console.log("fileList", fileList);
+            item.name = item.Key.split('/').pop()
+            const type = item.name.split('.')[1]
+            console.log('type', type)
+            const isView = this.typeList.find((item) => item === type)
+            item.isView = Boolean(isView)
+            return item
+          })
+          this.fileList = fileList
+          console.log('fileList', fileList)
         } else {
-          this.fileList = [];
+          this.fileList = []
         }
-      });
+      })
     },
-    handelDownloadFile(Key) {
+    handelDownloadFile (Key) {
       if (Key) {
         fileApi.geturl({ Key }).then((res) => {
-          window.open(res.downloadUrl, "_blank");
-        });
+          window.open(res.downloadUrl, '_blank')
+        })
       }
     },
-    handelPreUrl(Key, event) {
-      const suffix = Key.split(".").pop();
+    handelPreUrl (Key, event) {
+      const suffix = Key.split('.').pop()
       // 命中图片格式
-      if (suffix === "jpg" || suffix === "png") {
+      if (suffix === 'jpg' || suffix === 'png') {
         return fileApi.geturl({ Key }).then((res) => {
-          window.open(res.downloadUrl, "_blank");
+          window.open(res.downloadUrl, '_blank')
           // this.url = res.downloadUrl
-        });
+        })
       } else if (Key) {
         fileApi.geturl({ Key }).then((res) => {
-          window.open(res.previewUrl, "_blank");
-          console.log("res", res);
-        });
+          window.open(res.previewUrl, '_blank')
+          console.log('res', res)
+        })
       }
       // 命中dwg格式
-      //  else if (suffix === 'dwg') {
+      // else if (suffix === 'dwg') {
       //   return fileApi.geturl({ Key }).then((res) => {
-      //     window.open('https://ow365.cn/?i=31837&ssl=1&furl=' + res.downloadUrl, '_blank')
-
+      //     window.open(
+      //       'https://ow365.cn/?i=31837&ssl=1&furl=' + res.downloadUrl,
+      //       '_blank'
+      //     )
       //     // this.url = res.downloadUrl
       //   })
       // }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -235,17 +265,59 @@ export default {
   text-align: center;
   display: flex;
   flex-wrap: wrap;
-  padding: 30px;
+  padding: 10px 20px 30px;
+  .el-link--inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    p {
+      position: absolute;
+      top: 90px;
+      left: 0;
+      right: 0;
+      line-height: 18px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+    }
+    p:hover {
+      overflow: visible;
+      white-space: normal;
+      -webkit-line-clamp: none;
+    }
+  }
   .folder,
   .file {
     width: 150px;
-    height: 150px;
+    height: 120px;
+    margin: 0 10px;
     .folderName {
       font-size: 12px;
     }
-    i {
-      font-size: 80px;
+    .folder-icon {
+      font-size: 70px;
       color: #113970;
+    }
+
+    .file-actions {
+      position: absolute;
+      //   bottom: 92px;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      display: none;
+      justify-content: center;
+      background-color: white;
+      .icon-button {
+        font-size: 14px;
+        color: #113970;
+      }
+
+      .icon-button:first-child {
+        margin-right: 15px;
+      }
     }
   }
 }
@@ -257,32 +329,24 @@ export default {
 }
 
 .file-icon {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  //   position: absolute;
+  //   top: 0;
+  //   bottom: 0;
+  //   left: 0;
+  //   right: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  i {
+    color: #113970;
+
+    font-size: 70px;
+  }
 
   p {
     margin-top: 10px;
-  }
-}
-
-.file-actions {
-  position: absolute;
-  bottom: 80px;
-  left: 0;
-  width: 100%;
-  display: none;
-  justify-content: space-around;
-  background-color: white;
-  i {
     font-size: 12px;
-    color: white;
   }
 }
 
@@ -302,6 +366,14 @@ export default {
 
 .file-container:hover .file-actions,
 .file-container:hover .overlay {
-  display: block;
+  display: flex;
+}
+
+.file-container:hover .el-icon-document {
+  opacity: 0.2;
+}
+
+.path-icon {
+  margin: 0 5px;
 }
 </style>
