@@ -4,9 +4,9 @@ const path = require("path");
 function resolve(dir) {
   return path.join(__dirname, dir);
 }
-
+console.log("运行环境", process.env.NODE_ENV);
 module.exports = {
-  publicPath: "./",
+  publicPath: process.env.NODE_ENV === "production" ? "/admin/" : "./",
   outputDir: "admin",
   assetsDir: "static",
   lintOnSave: true,

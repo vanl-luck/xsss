@@ -318,6 +318,8 @@ const constantRoutes = [
 ];
 
 const router = new Router({
+  mode: "history",
+  base: process.env.VUE_APP_URL,
   routes: constantRoutes,
 });
 
