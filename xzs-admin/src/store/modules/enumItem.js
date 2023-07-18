@@ -12,7 +12,7 @@ const state = {
   },
   exam: {
     examPaper: {
-      paperTypeEnum: [{ key: 1, value: '固定试卷' }]
+      paperTypeEnum: [{ key: 1, value: '固定试卷' }, { key: 6, value: '练习试卷' }]
     },
     // , { key: 4, value: '时段试卷' }, { key: 6, value: '任务试卷' }
     question: {
