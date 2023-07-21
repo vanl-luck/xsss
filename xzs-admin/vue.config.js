@@ -1,62 +1,62 @@
-"use strict";
-const path = require("path");
+'use strict'
+const path = require('path')
 
-function resolve(dir) {
-  return path.join(__dirname, dir);
+function resolve (dir) {
+  return path.join(__dirname, dir)
 }
-console.log("运行环境", process.env.NODE_ENV);
+console.log('运行环境', process.env.NODE_ENV)
 module.exports = {
-  publicPath:'/',
-  outputDir: "admin",
-  assetsDir: "static",
+  publicPath: '/',
+  outputDir: 'admin',
+  assetsDir: 'static',
   lintOnSave: true,
   productionSourceMap: false,
   devServer: {
     open: true,
-    host: "localhost",
+    host: 'localhost',
     port: 8100,
     https: false,
     hotOnly: false,
     proxy: {
-      "/apis": {
-        target: "https://xzsadmin.mrhuxt.cn",
+      '/apis': {
+        target: 'https://xzsadmin.mrhuxt.cn',
         // target: "http://127.0.0.1:3456",
         pathRewrite: {
           // "^/api": "", // 重写接口
         },
-        changeOrigin: true,
+        changeOrigin: true
       },
-      "/api": {
-        target: "https://xzsadmin.mrhuxt.cn",
+      '/api': {
+        target: 'https://xzsadmin.mrhuxt.cn',
         // target: "http://localhost:8000",
         pathRewrite: {
           // "^/api": "", // 重写接口
         },
-        changeOrigin: true,
-      },
-    },
+        changeOrigin: true
+      }
+    }
   },
   pages: {
     index: {
-      entry: "src/main.js",
-      template: "public/index.html",
-      filename: "index.html",
-    },
+      entry: 'src/main.js',
+      template: 'public/index.html',
+      filename: 'index.html'
+    }
   },
 
-  chainWebpack(config) {
+  chainWebpack (config) {
     // set svg-sprite-loader
-    config.module.rule("svg").exclude.add(resolve("src/icons")).end();
+    config.module.rule('svg').exclude.add(resolve('src/icons')).end()
     config.module
-      .rule("icons")
+      .rule('icons')
       .test(/\.svg$/)
-      .include.add(resolve("src/icons"))
+      .include.add(resolve('src/icons'))
       .end()
-      .use("svg-sprite-loader")
-      .loader("svg-sprite-loader")
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
       .options({
-        symbolId: "icon-[name]",
+        symbolId: 'icon-[name]'
       })
-      .end();
-  },
-};
+      .end()
+  }
+}
