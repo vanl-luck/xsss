@@ -6,7 +6,7 @@ function resolve(dir) {
 }
 console.log("运行环境", process.env.NODE_ENV);
 module.exports = {
-  publicPath:'/',
+  publicPath: "./",
   outputDir: "admin",
   assetsDir: "static",
   lintOnSave: true,
