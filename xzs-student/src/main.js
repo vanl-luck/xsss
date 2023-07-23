@@ -1,54 +1,56 @@
-import Vue from 'vue'
-import App from './App.vue'
-import { router } from './router'
-import store from './store'
-import 'normalize.css/normalize.css'
-import Element from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-import '@/styles/index.scss' // global css
-import './icons' // icon
-import NProgress from 'nprogress' // progress bar
-import 'nprogress/nprogress.css' // progress bar style
+import Vue from "vue";
+import App from "./App.vue";
+import { router } from "./router";
+import store from "./store";
+import "normalize.css/normalize.css";
+import Element from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+import "@/styles/index.scss"; // global css
+import "./icons"; // icon
+import NProgress from "nprogress"; // progress bar
+import "nprogress/nprogress.css"; // progress bar style
 
 Vue.use(Element, {
-  size: 'medium' // set element-ui default size
-})
+  size: "medium", // set element-ui default size
+});
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
-NProgress.configure({ showSpinner: false }) // NProgress Configuration
+NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
 router.beforeEach(async (to, from, next) => {
   // start progress bar
-  NProgress.start()
+  NProgress.start();
   if (to.meta.title !== undefined) {
-    document.title = to.meta.title
+    document.title = to.meta.title;
   } else {
-    document.title = '\u200E'
+    document.title = "\u200E";
   }
 
   if (to.meta.bodyBackground !== undefined) {
-    document.querySelector('body').setAttribute('style', 'background: ' + to.meta.bodyBackground)
+    document
+      .querySelector("body")
+      .setAttribute("style", "background: " + to.meta.bodyBackground);
   } else {
-    document.querySelector('body').removeAttribute('style')
+    document.querySelector("body").removeAttribute("style");
   }
 
   if (to.path) {
     // eslint-disable-next-line no-undef
-    _hmt.push(['_trackPageview', '/#' + to.fullPath])
+    // _hmt.push(['_trackPageview', '/#' + to.fullPath])
   }
-  next()
-})
+  next();
+});
 
 router.afterEach((to, from, next) => {
   // finish progress bar
-  NProgress.done()
-})
+  NProgress.done();
+});
 
-Vue.prototype.$$router = router
+Vue.prototype.$$router = router;
 
 new Vue({
   router: router,
   store: store,
-  render: h => h(App)
-}).$mount('#app')
+  render: (h) => h(App),
+}).$mount("#app");

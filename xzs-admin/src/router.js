@@ -171,28 +171,28 @@ const constantRoutes = [
     ],
   },
   {
-    path: '/task',
+    path: "/task",
     component: Layout,
-    name: 'TaskPage',
+    name: "TaskPage",
     meta: {
-      title: '练习管理',
-      icon: 'task'
+      title: "练习管理",
+      icon: "task",
     },
     // alwaysShow: true,
     children: [
       {
-        path: 'list',
-        component: () => import('@/views/task/list'),
-        name: 'TaskListPage',
-        meta: { title: '练习列表', noCache: true }
+        path: "list",
+        component: () => import("@/views/task/list"),
+        name: "TaskListPage",
+        meta: { title: "练习列表", noCache: true },
       },
       {
-        path: 'edit',
-        component: () => import('@/views/task/edit'),
-        name: 'TaskEditPage',
-        meta: { title: '练习创建', noCache: true }
-      }
-    ]
+        path: "edit",
+        component: () => import("@/views/task/edit"),
+        name: "TaskEditPage",
+        meta: { title: "练习创建", noCache: true },
+      },
+    ],
   },
   {
     path: "/education",
@@ -279,22 +279,22 @@ const constantRoutes = [
   //   ]
   // },
   {
-    path: '/log',
+    path: "/log",
     component: Layout,
-    name: 'LogPage',
+    name: "LogPage",
     meta: {
-      title: '日志中心',
-      icon: 'log'
+      title: "日志中心",
+      icon: "log",
     },
     alwaysShow: true,
     children: [
       {
-        path: 'user/list',
-        component: () => import('@/views/log/list'),
-        name: 'LogUserPage',
-        meta: { title: '用户日志', noCache: true }
-      }
-    ]
+        path: "user/list",
+        component: () => import("@/views/log/list"),
+        name: "LogUserPage",
+        meta: { title: "用户日志", noCache: true },
+      },
+    ],
   },
   {
     path: "/profile",
@@ -318,8 +318,8 @@ const constantRoutes = [
 ];
 
 const router = new Router({
-  mode: "history",
-  base: process.env.VUE_APP_URL,
+  // mode: "hash",
+  // base: process.env.VUE_APP_URL,
   routes: constantRoutes,
 });
 
