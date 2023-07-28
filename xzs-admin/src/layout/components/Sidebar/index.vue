@@ -46,13 +46,16 @@ export default {
       }
 
       const filterroutes = [];
+      // 设置需要过滤的一级菜单的列表
+      const filterMenu = ["LogPage"];
       this.routes.forEach((item) => {
         if (item.name == "UserPage") {
           item.children = item.children.filter(
             (route) => route.name !== "UserAdminPageList"
           );
         }
-        filterroutes.push(item);
+        const isHiden = filterMenu.some((t) => t == item.name);
+        !isHiden && filterroutes.push(item);
       });
       return filterroutes;
       // return userName == "admin" ? this.routes : filterroutes;
