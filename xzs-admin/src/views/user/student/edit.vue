@@ -50,13 +50,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="资料授权目录" prop="file_path" required>
-        <el-cascader
-          v-if="cascaderShow"
-          v-model="form.file_path"
-          :props="getfilePathList()"
-        ></el-cascader>
-      </el-form-item>
+
       <el-form-item label="状态：" required>
         <el-select v-model="form.status" placeholder="状态">
           <el-option
@@ -93,7 +87,7 @@ export default {
         status: 1,
         age: "",
         sex: "",
-        file_path: [],
+
         birthDay: null,
         phone: null,
         userLevel: null,
@@ -105,9 +99,7 @@ export default {
         userName: [
           { required: true, message: "请输入用户名", trigger: "blur" },
         ],
-        file_path: [
-          { required: true, message: "请选择资料授权目录", trigger: "change" },
-        ],
+
         realName: [
           { required: true, message: "请输入真实姓名", trigger: "blur" },
         ],
@@ -142,18 +134,9 @@ export default {
             .createUser(this.form)
             .then((data) => {
               if (data.code === 1) {
-                const pathList = this.form.file_path;
-
-                const params = {
-                  id: this.$route.query.id,
-                  file_path: pathList,
-                };
-                fileApi.setPathById(params).then((res) => {
-                  // console.log("res", res);
-                  _this.$message.success(data.message);
-                  _this.delCurrentView(_this).then(() => {
-                    _this.$router.push("/user/student/list");
-                  });
+                _this.$message.success(data.message);
+                _this.delCurrentView(_this).then(() => {
+                  _this.$router.push("/user/student/list");
                 });
               } else {
                 _this.$message.error(data.message);
@@ -166,40 +149,6 @@ export default {
         } else {
           return false;
         }
-      });
-    },
-    getfilePathList() {
-      return {
-        lazy: true,
-        checkStrictly: true,
-        lazyLoad(node, resolve) {
-          const { value, level } = node;
-          console.log("node", node);
-          let Key = value || "";
-          fileApi
-            .getDirs({ Key })
-            .then((res) => {
-              const nodes = res.map((item) => {
-                return {
-                  value: item,
-                  label: item.split("/")[item.split("/").length - 2],
-                  leaf: level >= 3,
-                };
-              });
-              console.log(res, "res");
-              resolve(nodes);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        },
-      };
-    },
-    getfilePathById(id) {
-      fileApi.getPathById({ id }).then((res) => {
-        this.form.file_path = res.data.file_path;
-        this.cascaderShow = false;
-        console.log("res11", this.form.file_path);
       });
     },
 

@@ -62,154 +62,193 @@
 </template>
 
 <script>
-import fileApi from '@/api/file'
+import fileApi from "@/api/file";
+import { mapGetters, mapState } from "vuex";
+
 export default {
-  data () {
+  data() {
     return {
       folderList: [],
       fileList: [],
       pathList: [],
       typeList: [
-        'pptx',
-        'ppt',
-        'pot',
-        'potx',
-        'pps',
-        'ppsx',
-        'dps',
-        'dpt',
-        'pptm',
-        'potm',
-        'ppsm',
-        'doc',
-        'dot',
-        'wps',
-        'wpt',
-        'docx',
-        'dotx',
-        'docm',
-        'dotm',
-        'xls',
-        'xlt',
-        'et',
-        'ett',
-        'xlsx',
-        'xltx',
-        'csv',
-        'xlsb',
-        'xlsm',
-        'xltm',
-        'ets',
-        'pdf',
-        'lrc',
-        'c',
-        'cpp',
-        'h',
-        'asm',
-        's',
-        'java',
-        'asp',
-        'bat',
-        'bas',
-        'prg',
-        'cmd',
-        'rtf',
-        'txt',
-        'log',
-        'xml',
-        'htm',
-        'html',
-        'jpg',
-        'dwg',
-        'skp'
+        "pptx",
+        "ppt",
+        "pot",
+        "potx",
+        "pps",
+        "ppsx",
+        "dps",
+        "dpt",
+        "pptm",
+        "potm",
+        "ppsm",
+        "doc",
+        "dot",
+        "wps",
+        "wpt",
+        "docx",
+        "dotx",
+        "docm",
+        "dotm",
+        "xls",
+        "xlt",
+        "et",
+        "ett",
+        "xlsx",
+        "xltx",
+        "csv",
+        "xlsb",
+        "xlsm",
+        "xltm",
+        "ets",
+        "pdf",
+        "lrc",
+        "c",
+        "cpp",
+        "h",
+        "asm",
+        "s",
+        "java",
+        "asp",
+        "bat",
+        "bas",
+        "prg",
+        "cmd",
+        "rtf",
+        "txt",
+        "log",
+        "xml",
+        "htm",
+        "html",
+        "jpg",
+        "dwg",
+        "skp",
       ],
-      url: []
-    }
+      url: [],
+    };
   },
-  created () {
-    this.getfolders()
-    this.getfiles()
+  computed: {
+    ...mapGetters(["userName"]),
+  },
+  created() {
+    this.getDirectories();
+    // this.getfolders()
+    // this.getfiles()
   },
   methods: {
-    handelFolder (item) {
-      const { key } = item
-      this.getfolders(key)
-      this.getfiles(key)
-      console.log('handelFolder', item)
+    handelFolder(item) {
+      const { key } = item;
+      this.getfolders(key);
+      this.getfiles(key);
+      console.log("handelFolder", item);
     },
-    handelPath (index) {
-      //   console.log("path", index);
-      const path = this.pathList.slice(0, index + 1).join('/') + '/'
-      console.log('path', path)
-      this.getfolders(path)
-      this.getfiles(path)
+    handelPath(index) {
+      if (index == 0) {
+        this.getDirectories();
+      } else {
+        console.log("path", index);
+        this.pathList[0] = "水利工程制图资源库";
+        const path = this.pathList.slice(0, index + 1).join("/") + "/";
+        console.log("path", path);
+        this.getfolders(path);
+        this.getfiles(path);
+      }
     },
-    getfolders (Key = '') {
-      fileApi.getDirs({ Key }).then((data) => {
-        console.log('data', data)
+    getDirectories() {
+      const school_id = 1;
+      const user_name = this.userName;
+      fileApi.getDirectoriesBySchoolId({ school_id, user_name }).then((res) => {
+        console.log("res", res);
+        const data = res.data;
         if (data?.length) {
-          const newArr = []
+          const newArr = [];
           data.forEach((element) => {
-            const arr = element.split('/')
-            arr.pop()
-            const name = arr[arr.length - 1]
+            const arr = element.dir_name.split("/");
+            arr.pop();
+            const name = arr[arr.length - 1];
             const obj = {
               name,
-              key: element
-            }
-            newArr.push(obj)
-          })
-          this.folderList = newArr
+              key: element.dir_name,
+            };
+            newArr.push(obj);
+          });
+          this.folderList = newArr;
         } else {
-          this.folderList = []
+          this.folderList = [];
         }
-        if (Key) {
-          const pathList = Key.split('/')
-          pathList.pop()
-          this.pathList = pathList
-        } else {
-          this.pathList = ['水利工程制图资源库']
-        }
-      })
+        this.pathList = ["首页"];
+        this.fileList = [];
+      });
     },
-    getfiles (Key = '') {
+    getfolders(Key = "") {
+      fileApi.getDirs({ Key }).then((data) => {
+        console.log("data", data);
+        if (data?.length) {
+          const newArr = [];
+          data.forEach((element) => {
+            const arr = element.split("/");
+            arr.pop();
+            const name = arr[arr.length - 1];
+            const obj = {
+              name,
+              key: element,
+            };
+            newArr.push(obj);
+          });
+          this.folderList = newArr;
+        } else {
+          this.folderList = [];
+        }
+
+        if (Key) {
+          const pathList = Key.split("/");
+          pathList.pop();
+          pathList[0] = "首页";
+          this.pathList = pathList;
+        } else {
+          this.pathList = ["首页"];
+        }
+      });
+    },
+    getfiles(Key = "") {
       fileApi.getFiles({ Key }).then((res) => {
         if (res.data?.length) {
           const fileList = res.data.map((item) => {
-            item.name = item.Key.split('/').pop()
-            const type = item.name.split('.')[1]
-            console.log('type', type)
-            const isView = this.typeList.find((item) => item === type)
-            item.isView = Boolean(isView)
-            return item
-          })
-          this.fileList = fileList
-          console.log('fileList', fileList)
+            item.name = item.Key.split("/").pop();
+            const type = item.name.split(".")[1];
+            console.log("type", type);
+            const isView = this.typeList.find((item) => item === type);
+            item.isView = Boolean(isView);
+            return item;
+          });
+          this.fileList = fileList;
+          console.log("fileList", fileList);
         } else {
-          this.fileList = []
+          this.fileList = [];
         }
-      })
+      });
     },
-    handelDownloadFile (Key) {
+    handelDownloadFile(Key) {
       if (Key) {
         fileApi.geturl({ Key }).then((res) => {
-          window.open(res.downloadUrl, '_blank')
-        })
+          window.open(res.downloadUrl, "_blank");
+        });
       }
     },
-    handelPreUrl (Key, event) {
-      const suffix = Key.split('.').pop()
+    handelPreUrl(Key, event) {
+      const suffix = Key.split(".").pop();
       // 命中图片格式
-      if (suffix === 'jpg' || suffix === 'png') {
+      if (suffix === "jpg" || suffix === "png") {
         return fileApi.geturl({ Key }).then((res) => {
-          window.open(res.downloadUrl, '_blank')
+          window.open(res.downloadUrl, "_blank");
           // this.url = res.downloadUrl
-        })
+        });
       } else if (Key) {
         fileApi.geturl({ Key }).then((res) => {
-          window.open(res.previewUrl, '_blank')
-          console.log('res', res)
-        })
+          window.open(res.previewUrl, "_blank");
+          console.log("res", res);
+        });
       }
       // 命中dwg格式
       // else if (suffix === 'dwg') {
@@ -221,9 +260,9 @@ export default {
       //     // this.url = res.downloadUrl
       //   })
       // }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
