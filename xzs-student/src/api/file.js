@@ -1,4 +1,4 @@
-import { post, get } from "@/utils/request";
+import { post, postWithLoadTip, get } from "@/utils/request";
 
 export default {
   //   查询文件夹
@@ -8,6 +8,16 @@ export default {
   //   查询预览和下载URL
   geturl: (query) => post("/apis/file/geturl", query),
 
+  //  修改授权文件
+  setPathById: (query) => post("/apis/file/setPathById", query),
+
   //   查询授权文件
-  getPathByUsername: (query) => get("/apis/file/getPathByUsername", query),
+  getPathById: (query) => get("/apis/file/getPathById", query),
+
+  //getDirectoriesBySchoolId
+  getDirectoriesBySchoolId: (query) =>
+    get("/apis/file/getDirectoriesBySchoolId", query),
+
+  setDirectoriesBySchoolId: (query) =>
+    post("/apis/file/setDirectoriesBySchoolId", query),
 };
