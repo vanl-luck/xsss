@@ -72,7 +72,6 @@
 <script>
 import { mapGetters, mapState, mapActions } from "vuex";
 import userApi from "@/api/user";
-import fileApi from "@/api/file";
 let id = 0;
 
 export default {
@@ -117,7 +116,6 @@ export default {
       _this.formLoading = true;
       userApi.selectUser(id).then((re) => {
         _this.form = re.response;
-        _this.getfilePathById(id);
         _this.formLoading = false;
       });
     } else {
