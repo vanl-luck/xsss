@@ -13,4 +13,11 @@ export default {
 
   //   查询授权文件
   getPathById: (query) => get("/apis/file/getPathById", query),
+
+  //getDirectoriesBySchoolId
+  getDirectoriesBySchoolId: (query) =>
+    get("/apis/file/getDirectoriesBySchoolId", query),
+
+  setDirectoriesBySchoolId: (query) =>
+    post("/apis/file/setDirectoriesBySchoolId", query),
 };

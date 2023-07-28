@@ -129,7 +129,7 @@ export default {
         _this.formLoading = false;
       });
     } else {
-      this.cascaderShow = true;
+      this.cascaderShow = false;
     }
   },
   methods: {
@@ -198,7 +198,7 @@ export default {
     getfilePathById(id) {
       fileApi.getPathById({ id }).then((res) => {
         this.form.file_path = res.data.file_path;
-        this.cascaderShow = true;
+        this.cascaderShow = false;
         console.log("res11", this.form.file_path);
       });
     },
