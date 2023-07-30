@@ -40,7 +40,7 @@
       <el-form-item label="手机：">
         <el-input v-model="form.phone"></el-input>
       </el-form-item>
-      <el-form-item label="资料授权目录" required>
+      <el-form-item label="资料授权目录">
         <el-select
           style="width: 100%"
           class="directoriesSelect"
@@ -154,10 +154,10 @@ export default {
                   res.data.map((item) => item.id)
                 );
                 // this.form.directoriesIds = res.data.map((item) => item.id);
-                this.formLoading = false;
 
                 console.log("selecethis.formRes", this.form);
               }
+              this.formLoading = false;
             });
         }
       });

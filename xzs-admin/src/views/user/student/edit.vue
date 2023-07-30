@@ -43,7 +43,7 @@
       <el-form-item label="年级：" prop="userLevel" required>
         <el-select v-model="form.userLevel" placeholder="年级">
           <el-option
-            v-for="item in levelEnum"
+            v-for="item in levels"
             :key="item.key"
             :value="item.key"
             :label="item.value"
@@ -110,7 +110,7 @@ export default {
   },
   created() {
     let id = this.$route.query.id;
-
+    this.initSubject();
     let _this = this;
     if (id && parseInt(id) !== 0) {
       _this.formLoading = true;
@@ -169,6 +169,7 @@ export default {
       this.form.id = lastId;
     },
     ...mapActions("tagsView", { delCurrentView: "delCurrentView" }),
+    ...mapActions("exam", { initSubject: "initSubject" }),
   },
   computed: {
     ...mapGetters("enumItem", ["enumFormat"]),
@@ -177,6 +178,10 @@ export default {
       roleEnum: (state) => state.user.roleEnum,
       statusEnum: (state) => state.user.statusEnum,
       levelEnum: (state) => state.user.levelEnum,
+    }),
+    ...mapState("exam", {
+      subjects: (state) => state.subjects,
+      levels: (state) => state.levels,
     }),
   },
 };
