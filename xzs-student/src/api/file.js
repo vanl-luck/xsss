@@ -20,4 +20,7 @@ export default {
 
   setDirectoriesBySchoolId: (query) =>
     post("/apis/file/setDirectoriesBySchoolId", query),
+
+  //getLevelList
+  getLevelList: (query) => get("/apis/file/getLevelList", query),
 };

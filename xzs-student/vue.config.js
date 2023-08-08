@@ -19,15 +19,14 @@ module.exports = {
     hotOnly: false,
     proxy: {
       "/apis": {
-        // target: "https://xzsadmin.mrhuxt.cn",
-        target: "http://127.0.0.1:3456",
+        target: "https://admin.xipeisoft.com",
         pathRewrite: {
           // "^/api": "", // 重写接口
         },
         changeOrigin: true,
       },
       "/api": {
-        target: "https://xzsadmin.mrhuxt.cn",
+        target: "https://admin.xipeisoft.com",
         // target: "http://127.0.0.1:8100",
         pathRewrite: {
           // "^/api": "", // 重写接口

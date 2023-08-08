@@ -92,7 +92,7 @@
                 <el-form-item label="手机：">
                   <el-input v-model="form.phone"></el-input>
                 </el-form-item>
-                <el-form-item label="学科：" prop="userLevel" required>
+                <!-- <el-form-item label="学科：" prop="userLevel" required>
                   <el-select v-model="form.userLevel" placeholder="学科">
                     <el-option
                       v-for="item in levelEnum"
@@ -101,7 +101,7 @@
                       :label="item.value"
                     ></el-option>
                   </el-select>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item>
                   <el-button type="primary" @click="submitForm">更新</el-button>
                 </el-form-item>
@@ -116,7 +116,7 @@
 
 <script>
 import userApi from "@/api/user";
-import { mapGetters, mapState } from "vuex";
+import { mapGetters, mapState, mapActions } from "vuex";
 
 export default {
   data() {
@@ -144,8 +144,9 @@ export default {
       },
     };
   },
-  created() {
+  async created() {
     let _this = this;
+    await this.initLevels();
     userApi.getUserEvent().then((re) => {
       _this.event = re.response;
     });
@@ -187,6 +188,7 @@ export default {
     levelFormatter(level) {
       return this.enumFormat(this.levelEnum, level);
     },
+    ...mapActions("enumItem", ["initLevels"]),
   },
   computed: {
     ...mapGetters("enumItem", ["enumFormat"]),
