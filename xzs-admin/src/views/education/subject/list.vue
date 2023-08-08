@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapGetters, mapState, mapActions } from "vuex";
 import Pagination from "@/components/Pagination";
 import subjectApi from "@/api/subject";
 
@@ -91,6 +91,7 @@ export default {
         this.tableData = re.list;
         this.total = re.total;
         this.queryParam.pageIndex = re.pageNum;
+        this.initLevels();
         this.listLoading = false;
       });
     },
@@ -109,6 +110,7 @@ export default {
         }
       });
     },
+    ...mapActions("enumItem", ["initLevels"]),
   },
   computed: {
     ...mapGetters("enumItem", ["enumFormat"]),

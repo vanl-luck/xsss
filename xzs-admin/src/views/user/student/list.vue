@@ -25,7 +25,7 @@
       <el-table-column prop="realName" label="真实姓名" />
       <el-table-column
         prop="userLevel"
-        label="学级"
+        label="学科"
         :formatter="levelFormatter"
       />
       <el-table-column

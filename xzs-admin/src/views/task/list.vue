@@ -28,7 +28,7 @@
       <el-table-column prop="title" label="标题" />
       <el-table-column
         prop="gradeLevel"
-        label="学级"
+        label="学科"
         :formatter="levelFormatter"
       />
       <el-table-column prop="createUserName" label="发送人" width="100" />
@@ -110,7 +110,7 @@ export default {
       });
     },
     levelFormatter(row, column, cellValue, index) {
-      return this.enumFormat(this.levelEnum, cellValue);
+      return this.enumFormat(this.levels, cellValue);
     },
     ...mapActions("exam", { initSubject: "initSubject" }),
   },
