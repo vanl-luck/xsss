@@ -4,10 +4,10 @@
       <el-form-item label="题目ID：">
         <el-input v-model="queryParam.id" clearable></el-input>
       </el-form-item>
-      <el-form-item label="年级：">
+      <el-form-item label="学科：">
         <el-select
           v-model="queryParam.level"
-          placeholder="年级"
+          placeholder="学科"
           @change="levelChange"
           clearable
         >
@@ -19,7 +19,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="学科：">
+      <el-form-item label="子学科：">
         <el-select v-model="queryParam.subjectId" clearable>
           <el-option
             v-for="item in subjectFilter"
@@ -47,7 +47,7 @@
       <el-table-column prop="id" label="Id" width="90px" />
       <el-table-column
         prop="subjectId"
-        label="学科"
+        label="子学科"
         :formatter="subjectFormatter"
         width="120px"
       />

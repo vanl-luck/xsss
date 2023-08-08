@@ -12,7 +12,7 @@
         >
           <el-table-column prop="id" label="序号" width="90px" />
           <el-table-column prop="paperName" label="名称" />
-          <el-table-column prop="subjectName" label="学科" width="70" />
+          <el-table-column prop="subjectName" label="子学科" width="70" />
           <el-table-column label="状态" prop="status" width="100px">
             <template slot-scope="{ row }">
               <el-tag :type="statusTagFormatter(row.status)">

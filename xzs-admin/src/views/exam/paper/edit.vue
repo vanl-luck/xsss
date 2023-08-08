@@ -7,10 +7,10 @@
       v-loading="formLoading"
       :rules="rules"
     >
-      <el-form-item label="年级：" prop="level" required>
+      <el-form-item label="学科：" prop="level" required>
         <el-select
           v-model="form.level"
-          placeholder="年级"
+          placeholder="学科"
           @change="levelChange"
         >
           <el-option
@@ -21,8 +21,8 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="学科：" prop="subjectId" required>
-        <el-select v-model="form.subjectId" placeholder="学科">
+      <el-form-item label="子学科：" prop="subjectId" required>
+        <el-select v-model="form.subjectId" placeholder="子学科">
           <el-option
             v-for="item in subjectFilter"
             :key="item.id"
@@ -196,9 +196,9 @@ export default {
       subjectFilter: null,
       formLoading: false,
       rules: {
-        level: [{ required: true, message: "请选择年级", trigger: "change" }],
+        level: [{ required: true, message: "请选择学科", trigger: "change" }],
         subjectId: [
-          { required: true, message: "请选择学科", trigger: "change" },
+          { required: true, message: "请选择子学科", trigger: "change" },
         ],
         paperType: [
           { required: true, message: "请选择试卷类型", trigger: "change" },

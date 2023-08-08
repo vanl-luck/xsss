@@ -6,11 +6,11 @@
       label-width="100px"
       v-loading="formLoading"
     >
-      <el-form-item label="学科：" required>
+      <el-form-item label="子学科：" required>
         <el-input v-model="form.name"></el-input>
       </el-form-item>
-      <el-form-item label="年级：" required>
-        <el-select v-model="form.level" placeholder="年级">
+      <el-form-item label="学科：" required>
+        <el-select v-model="form.level" placeholder="学科">
           <el-option
             v-for="item in levels"
             :key="item.key"
