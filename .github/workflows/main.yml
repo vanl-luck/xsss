@@ -8,28 +8,15 @@ on:
 env:
   REGISTRY: haomingkeji-docker.pkg.coding.net
   REGISTRY_PATH: zaixiankaoshi/examination
-  IMAGE_NAME: examination
+  IMAGE_NAME_ADMIN: admin-web
+  IMAGE_NAME_STUDENT: student-web
 
 jobs:
-  build-and-push:
+  build-admin:
     runs-on: ubuntu-latest
     steps:
-      - name: Set UTF-8 Locale
-        run: |
-          export LANG="zh_CN.UTF-8"
-          export LC_ALL="zh_CN.UTF-8"
       - name: Check out code
         uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - name: Install dependencies and build
-        run: |
-          # npm ci
-      # - name: Get timestamp
-      #   id: get-timestamp
-      #   run: echo "::set-output name=timestamp::$(python -c 'import time; print(time.strftime("%Y_%m_%d_%H_%M"))')"
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -56,6 +43,41 @@ jobs:
         name: Build and push Docker image
         uses: docker/build-push-action@v4    
         with:
-          context: .
+          context: ./xzs-admin
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+          tags: ${{ env.REGISTRY }}/${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME_ADMIN }}:latest,${{ env.REGISTRY }}/${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+  build-student:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to TENCENT Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.TENCENT_CLOUD_USERNAME }}
+          password: ${{ secrets.TENCENT_CLOUD_PASSWORD }} 
+      - name: Get and Format Current Time
+        id: formatted_time
+        run: |
+          # 格式化时间为 '2022.01.13_13:34' 格式
+          echo "::set-output name=formatted_time::$(date +'%Y.%m.%d %H:%M')"
+      -
+        name: echo current tags
+        run: |
+          echo 构建新tag ${{ steps.formatted_time.outputs.formatted_time }}: ${{github.ref_name}}
+      -
+        name: Build and push Docker image
+        uses: docker/build-push-action@v4    
+        with:
+          context: ./xzs-student
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME_STUDENT }}:latest,${{ env.REGISTRY }}/${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+  
