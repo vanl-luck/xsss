@@ -1,8 +1,8 @@
 name: Build and Push to Tencent Cloud
 on:
   push:
-    # branches:
-    #   - main
+    branches:
+      - main
     tags:
       - "v*"
 env:
